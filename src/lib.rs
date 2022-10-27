@@ -1,4 +1,4 @@
-use std::ffi::{c_char, CStr, CString};
+use std::ffi::{c_char, CStr};
 
 use scraper::{html::Select, ElementRef, Html, Selector};
 
@@ -47,10 +47,4 @@ pub extern "C" fn next_select<'a, 'b>(select: *mut Select<'a, 'b>) -> *const Ele
         Some(s) => raw_point!(s),
         None => std::ptr::null(),
     }
-}
-
-#[no_mangle]
-pub extern "C" fn element_html<'a>(el: *const ElementRef<'a>) -> *const c_char {
-    let el = unsafe { el.as_ref().unwrap() };
-    CString::new(el.html()).unwrap().into_raw()
 }
