@@ -2,7 +2,10 @@ use std::ffi::{c_char, CStr, CString};
 
 use scraper::{html::Select, ElementRef, Html, Selector};
 
+mod element;
 mod rule;
+
+pub use element::*;
 
 #[no_mangle]
 pub extern "C" fn parse_html(content: *const c_char) -> *const Html {
