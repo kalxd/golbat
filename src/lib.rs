@@ -11,6 +11,6 @@ pub use html::*;
 
 #[no_mangle]
 pub extern "C" fn build_selector(char_ptr: *const c_char) -> *const Selector {
-    let cstr = unsafe { CStr::from_ptr(char_ptr) };
-    raw_point!(Selector::parse(cstr.to_str().unwrap()).unwrap())
+	let cstr = unsafe { CStr::from_ptr(char_ptr) };
+	raw_point!(Selector::parse(cstr.to_str().unwrap()).unwrap())
 }
