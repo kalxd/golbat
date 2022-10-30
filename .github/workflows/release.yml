@@ -44,6 +44,6 @@ jobs:
           rust_target: ${{ matrix.target }}
           archive_suffix: ${{ matrix.suffix }}
           archive_types: ${{ matrix.archive }}
-          extra_files: README.md target/release/${{matrix.filename}}
+          extra_files: README.md ${{matrix.filename}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
