@@ -6,7 +6,7 @@ use scraper::{
 	ElementRef, Selector,
 };
 
-use crate::raw_point;
+use crate::into_ptr;
 
 #[repr(C)]
 pub struct CTuple {
@@ -23,7 +23,7 @@ pub extern "C" fn element_select<'a, 'b>(
 	let selector = unsafe { selector.as_ref().unwrap() };
 
 	let iter = el.select(&selector);
-	raw_point!(iter)
+	into_ptr!(iter)
 }
 
 #[no_mangle]
@@ -32,7 +32,7 @@ pub extern "C" fn next_element_select<'a, 'b>(
 ) -> *const ElementRef<'a> {
 	let iter = unsafe { select.as_mut().unwrap() };
 	match iter.next() {
-		Some(el) => raw_point!(el),
+		Some(el) => into_ptr!(el),
 		None => std::ptr::null(),
 	}
 }
@@ -55,7 +55,7 @@ pub extern "C" fn element_inner_html<'a>(el: *const ElementRef<'a>) -> *const c_
 pub extern "C" fn element_text<'a>(el: *const ElementRef<'a>) -> *mut Text {
 	let el = unsafe { el.as_ref().unwrap() };
 	let text = el.text();
-	raw_point!(text)
+	into_ptr!(text)
 }
 
 #[no_mangle]
@@ -87,7 +87,7 @@ pub extern "C" fn element_id<'a>(el: *const ElementRef<'a>) -> *const c_char {
 #[no_mangle]
 pub extern "C" fn element_classes<'a>(el: *const ElementRef<'a>) -> *mut Classes {
 	let el = unsafe { el.as_ref().unwrap() };
-	raw_point!(el.value().classes())
+	into_ptr!(el.value().classes())
 }
 
 #[no_mangle]
@@ -115,7 +115,7 @@ pub extern "C" fn element_attr<'a>(
 #[no_mangle]
 pub extern "C" fn element_attrs<'a>(el: *const ElementRef<'a>) -> *mut Attrs<'_> {
 	let el = unsafe { el.as_ref().unwrap() };
-	raw_point!(el.value().attrs())
+	into_ptr!(el.value().attrs())
 }
 
 #[no_mangle]
@@ -125,7 +125,7 @@ pub extern "C" fn next_element_attrs<'a>(iter: *mut Attrs<'a>) -> *const CTuple 
 		Some((a, b)) => {
 			let fst = CString::new(a).unwrap().into_raw();
 			let snd = CString::new(b).unwrap().into_raw();
-			raw_point!(CTuple { fst, snd })
+			into_ptr!(CTuple { fst, snd })
 		}
 		None => std::ptr::null(),
 	}
