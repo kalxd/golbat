@@ -42,8 +42,3 @@ pub extern "C" fn next_html_select<'a, 'b>(select: *mut Select<'a, 'b>) -> *cons
 pub unsafe extern "C" fn free_html(ptr: *mut Html) {
 	drop_ptr(ptr);
 }
-
-#[no_mangle]
-pub unsafe extern "C" fn free_select<'a, 'b>(ptr: *mut Select<'a, 'b>) {
-	drop_ptr(ptr);
-}

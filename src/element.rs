@@ -6,7 +6,12 @@ use scraper::{
 	ElementRef, Selector,
 };
 
-use crate::into_ptr;
+use crate::{into_ptr, rule::drop_ptr};
+
+#[no_mangle]
+pub unsafe extern "C" fn free_element<'a>(ptr: *mut ElementRef<'a>) {
+	drop_ptr(ptr)
+}
 
 #[repr(C)]
 pub struct CTuple {
@@ -24,17 +29,6 @@ pub extern "C" fn element_select<'a, 'b>(
 
 	let iter = el.select(&selector);
 	into_ptr!(iter)
-}
-
-#[no_mangle]
-pub extern "C" fn next_element_select<'a, 'b>(
-	select: *mut Select<'a, 'b>,
-) -> *const ElementRef<'a> {
-	let iter = unsafe { select.as_mut().unwrap() };
-	match iter.next() {
-		Some(el) => into_ptr!(el),
-		None => std::ptr::null(),
-	}
 }
 
 #[no_mangle]
