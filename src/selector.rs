@@ -1,11 +1,11 @@
 use scraper::Selector;
-use std::ffi::{c_char, CStr};
+use std::ffi::c_char;
 
-use crate::rule::drop_ptr;
+use crate::rule::{drop_ptr, unsafe_str};
 
 #[no_mangle]
 pub extern "C" fn build_selector(char_ptr: *const c_char) -> *const Selector {
-	let s = unsafe { CStr::from_ptr(char_ptr) }.to_str().unwrap();
+	let s = unsafe { unsafe_str(char_ptr) };
 	let selector = Selector::parse(s).unwrap();
 	crate::into_ptr!(selector)
 }

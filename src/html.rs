@@ -1,19 +1,20 @@
 use scraper::{html::Select, ElementRef, Html, Selector};
-use std::ffi::{c_char, CStr};
+use std::ffi::c_char;
 
 use crate::into_ptr;
+use crate::rule::{drop_ptr, unsafe_str};
 
 #[no_mangle]
 pub extern "C" fn parse_html(content: *const c_char) -> *const Html {
-	let cstr = unsafe { CStr::from_ptr(content) };
-	let html = Html::parse_document(cstr.to_str().unwrap());
+	let content = unsafe { unsafe_str(content) };
+	let html = Html::parse_document(content);
 	into_ptr!(html)
 }
 
 #[no_mangle]
 pub extern "C" fn parse_fragment(char_ptr: *const c_char) -> *const Html {
-	let cstr = unsafe { CStr::from_ptr(char_ptr) };
-	let html = Html::parse_fragment(cstr.to_str().unwrap());
+	let fragment = unsafe { unsafe_str(char_ptr) };
+	let html = Html::parse_fragment(fragment);
 	into_ptr!(html)
 }
 
@@ -35,4 +36,14 @@ pub extern "C" fn next_html_select<'a, 'b>(select: *mut Select<'a, 'b>) -> *cons
 		Some(s) => into_ptr!(s),
 		None => std::ptr::null(),
 	}
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn free_html(ptr: *mut Html) {
+	drop_ptr(ptr);
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn free_select<'a, 'b>(ptr: *mut Select<'a, 'b>) {
+	drop_ptr(ptr);
 }
