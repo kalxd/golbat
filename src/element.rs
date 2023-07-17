@@ -9,7 +9,7 @@ use scraper::{
 use crate::{into_ptr, rule::drop_ptr};
 
 #[no_mangle]
-pub unsafe extern "C" fn free_element<'a>(ptr: *mut ElementRef<'a>) {
+pub unsafe extern "C" fn free_element_ref<'a>(ptr: *mut ElementRef<'a>) {
 	drop_ptr(ptr)
 }
 

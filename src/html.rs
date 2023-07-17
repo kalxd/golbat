@@ -1,8 +1,13 @@
-use scraper::{html::Select, ElementRef, Html, Selector};
+use scraper::{html::Select, Html, Selector};
 use std::ffi::c_char;
 
 use crate::into_ptr;
 use crate::rule::{drop_ptr, unsafe_str};
+
+#[no_mangle]
+pub unsafe extern "C" fn free_html(ptr: *mut Html) {
+	drop_ptr(ptr);
+}
 
 #[no_mangle]
 pub extern "C" fn parse_html(content: *const c_char) -> *const Html {
@@ -26,19 +31,4 @@ pub extern "C" fn html_select<'a, 'b>(
 	let html = unsafe { html.as_ref().unwrap() };
 	let selector = unsafe { selector.as_ref().unwrap() };
 	into_ptr!(html.select(&selector))
-}
-
-#[no_mangle]
-pub extern "C" fn next_html_select<'a, 'b>(select: *mut Select<'a, 'b>) -> *const ElementRef<'a> {
-	let select: &mut Select = unsafe { select.as_mut().unwrap() };
-
-	match select.next() {
-		Some(s) => into_ptr!(s),
-		None => std::ptr::null(),
-	}
-}
-
-#[no_mangle]
-pub unsafe extern "C" fn free_html(ptr: *mut Html) {
-	drop_ptr(ptr);
 }
