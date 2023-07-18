@@ -15,9 +15,20 @@ pub unsafe extern "C" fn free_element_select<'a, 'b>(ptr: *mut ElementSelect<'a,
 }
 
 #[no_mangle]
-pub extern "C" fn html_element_next<'a, 'b>(
+pub extern "C" fn html_select_next<'a, 'b>(
 	ptr: *mut HtmlSelect<'a, 'b>,
 ) -> *const <HtmlSelect<'a, 'b> as Iterator>::Item {
+	let iter = unsafe { &mut *ptr };
+	match iter.next() {
+		Some(v) => into_ptr!(v),
+		None => std::ptr::null(),
+	}
+}
+
+#[no_mangle]
+pub extern "C" fn element_select_next<'a, 'b>(
+	ptr: *mut ElementSelect<'a, 'b>,
+) -> *const <ElementSelect<'a, 'b> as Iterator>::Item {
 	let iter = unsafe { &mut *ptr };
 	match iter.next() {
 		Some(v) => into_ptr!(v),
