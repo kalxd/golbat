@@ -19,12 +19,22 @@ pub extern "C" fn element_id<'a>(ptr: *const ElementRef<'a>) -> *const c_char {
 }
 
 #[no_mangle]
-pub extern "C" fn element_has_class<'a>(
-	el_ptr: *const ElementRef<'a>,
-	class_ptr: *const c_char,
-) -> bool {
-	let el = unsafe { &*el_ptr };
-	let cstr = unsafe { CStr::from_ptr(class_ptr) }.to_str().unwrap();
+pub extern "C" fn element_has_class<'a>(ptr: *const ElementRef<'a>, pstr: *const c_char) -> bool {
+	let el = unsafe { &*ptr };
+	let cstr = unsafe { CStr::from_ptr(pstr) }.to_str().unwrap();
 	el.value()
 		.has_class(cstr, scraper::CaseSensitivity::CaseSensitive)
+}
+
+#[no_mangle]
+pub extern "C" fn element_attr<'a>(
+	ptr: *const ElementRef<'a>,
+	pstr: *const c_char,
+) -> *const c_char {
+	let el = unsafe { &*ptr };
+	let cstr = unsafe { CStr::from_ptr(pstr) }.to_str().unwrap();
+	match el.value().attr(cstr) {
+		Some(s) => CString::new(s).unwrap().into_raw(),
+		None => std::ptr::null(),
+	}
 }
