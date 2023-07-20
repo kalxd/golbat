@@ -1,3 +1,4 @@
+mod cstringpair;
 mod element;
 mod html;
 mod rule;
@@ -6,6 +7,7 @@ mod selector;
 
 use std::ffi::{c_char, CString};
 
+pub use cstringpair::*;
 pub use element::*;
 pub use html::*;
 pub use select::*;
