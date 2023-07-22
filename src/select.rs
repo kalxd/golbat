@@ -6,12 +6,12 @@ use crate::rule::drop_ptr;
 
 #[no_mangle]
 pub unsafe extern "C" fn free_html_select<'a, 'b>(ptr: *mut HtmlSelect<'a, 'b>) {
-	drop_ptr(dbg!(ptr));
+	drop_ptr(ptr)
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn free_element_select<'a, 'b>(ptr: *mut ElementSelect<'a, 'b>) {
-	drop_ptr(ptr);
+	drop_ptr(ptr)
 }
 
 #[no_mangle]
