@@ -1,8 +1,9 @@
 use std::ffi::{c_char, CStr, CString};
 
 use scraper::{
+	element_ref::Select,
 	node::{Attrs, Classes},
-	ElementRef,
+	ElementRef, Selector,
 };
 
 use crate::{into_ptr, rule::drop_ptr, CStringPair};
@@ -91,6 +92,25 @@ pub extern "C" fn element_classes<'a>(ptr: *const ElementRef<'a>) -> *const Clas
 pub extern "C" fn element_classes_next<'a>(ptr: *mut Classes<'a>) -> *const c_char {
 	let iter = unsafe { &mut *ptr };
 	match iter.next() {
+		Some(s) => CString::new(s).unwrap().into_raw(),
+		None => std::ptr::null(),
+	}
+}
+
+#[no_mangle]
+pub extern "C" fn element_select<'a, 'b>(
+	ptr: *const ElementRef<'a>,
+	selector_ptr: *const Selector,
+) -> *const Select<'a, 'b> {
+	let el = unsafe { &*ptr };
+	let selector = unsafe { &*selector_ptr };
+	into_ptr!(el.select(&selector))
+}
+
+#[no_mangle]
+pub extern "C" fn element_text<'a>(ptr: *const ElementRef<'a>) -> *const c_char {
+	let el = unsafe { &*ptr };
+	match el.text().next() {
 		Some(s) => CString::new(s).unwrap().into_raw(),
 		None => std::ptr::null(),
 	}

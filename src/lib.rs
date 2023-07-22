@@ -5,7 +5,8 @@ mod rule;
 mod select;
 mod selector;
 
-use std::ffi::{c_char, CString};
+use rule::drop_ptr;
+use std::ffi::c_char;
 
 pub use cstringpair::*;
 pub use element::*;
@@ -15,5 +16,5 @@ pub use selector::*;
 
 #[no_mangle]
 pub unsafe extern "C" fn free_cstring(ptr: *mut c_char) {
-	let _ = unsafe { CString::from_raw(ptr) };
+	drop_ptr(ptr)
 }
