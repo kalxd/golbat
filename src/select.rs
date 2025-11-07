@@ -4,17 +4,17 @@ use scraper::html::Select as HtmlSelect;
 use crate::into_ptr;
 use crate::rule::drop_ptr;
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn free_html_select<'a, 'b>(ptr: *mut HtmlSelect<'a, 'b>) {
-	drop_ptr(ptr)
+	unsafe { drop_ptr(ptr) }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn free_element_select<'a, 'b>(ptr: *mut ElementSelect<'a, 'b>) {
-	drop_ptr(ptr)
+	unsafe { drop_ptr(ptr) }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn html_select_next<'a, 'b>(
 	ptr: *mut HtmlSelect<'a, 'b>,
 ) -> *const <HtmlSelect<'a, 'b> as Iterator>::Item {
@@ -25,7 +25,7 @@ pub extern "C" fn html_select_next<'a, 'b>(
 	}
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn element_select_next<'a, 'b>(
 	ptr: *mut ElementSelect<'a, 'b>,
 ) -> *const <ElementSelect<'a, 'b> as Iterator>::Item {

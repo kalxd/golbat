@@ -14,7 +14,7 @@ pub use html::*;
 pub use select::*;
 pub use selector::*;
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn free_cstring(ptr: *mut c_char) {
-	drop_ptr(ptr)
+	unsafe { drop_ptr(ptr) }
 }
