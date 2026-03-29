@@ -12,14 +12,14 @@ pub unsafe extern "C" fn html_free(ptr: *mut Html) {
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn html_parse_doc(content: *mut c_char) -> *const Html {
+pub extern "C" fn html_parse_doc(content: *const c_char) -> *const Html {
 	let content = unsafe { unsafe_str(content) };
 	let html = Html::parse_document(content);
 	into_ptr!(html)
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn parse_fragment(char_ptr: *const c_char) -> *const Html {
+pub extern "C" fn html_parse_fragment(char_ptr: *const c_char) -> *const Html {
 	let fragment = unsafe { unsafe_str(char_ptr) };
 	let html = Html::parse_fragment(fragment);
 	into_ptr!(html)
@@ -29,8 +29,14 @@ pub extern "C" fn parse_fragment(char_ptr: *const c_char) -> *const Html {
 pub extern "C" fn html_select<'a, 'b>(
 	html: *const Html,
 	selector: *const Selector,
-) -> *mut Select<'a, 'b> {
+) -> *const Select<'a, 'b> {
 	let html = unsafe { html.as_ref().unwrap() };
 	let selector = unsafe { selector.as_ref().unwrap() };
 	into_ptr!(html.select(&selector))
+}
+
+#[unsafe(no_mangle)]
+pub extern "C" fn html_dbg(ptr: *const Html) {
+	let html = unsafe { &*ptr };
+	dbg!(html);
 }

@@ -1,4 +1,4 @@
-use std::ffi::{c_char, CStr};
+use std::ffi::{CStr, c_char};
 
 #[macro_export]
 macro_rules! into_ptr {
