@@ -5,12 +5,12 @@ use crate::into_ptr;
 use crate::rule::drop_ptr;
 
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn free_html_select<'a, 'b>(ptr: *mut HtmlSelect<'a, 'b>) {
+pub unsafe extern "C" fn html_select_select<'a, 'b>(ptr: *mut HtmlSelect<'a, 'b>) {
 	unsafe { drop_ptr(ptr) }
 }
 
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn free_element_select<'a, 'b>(ptr: *mut ElementSelect<'a, 'b>) {
+pub unsafe extern "C" fn element_select_free<'a, 'b>(ptr: *mut ElementSelect<'a, 'b>) {
 	unsafe { drop_ptr(ptr) }
 }
 
