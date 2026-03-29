@@ -1,15 +1,15 @@
-use std::ffi::{c_char, CStr, CString};
+use std::ffi::{CStr, CString, c_char};
 
 use scraper::{
+	ElementRef, Selector,
 	element_ref::Select,
 	node::{Attrs, Classes},
-	ElementRef, Selector,
 };
 
-use crate::{into_ptr, rule::drop_ptr, CStringPair};
+use crate::{into_ptr, rule::drop_ptr};
 
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn free_element_ref<'a>(ptr: *mut ElementRef<'a>) {
+pub unsafe extern "C" fn element_free<'a>(ptr: *mut ElementRef<'a>) {
 	unsafe { drop_ptr(ptr) }
 }
 
@@ -54,6 +54,7 @@ pub extern "C" fn element_attrs<'a>(ptr: *const ElementRef<'a>) -> *const Attrs<
 	into_ptr!(el.value().attrs())
 }
 
+/*
 #[unsafe(no_mangle)]
 pub extern "C" fn element_attrs_next<'a>(ptr: *mut Attrs<'a>) -> *const CStringPair<'a> {
 	let iter = unsafe { &mut *ptr };
@@ -61,7 +62,8 @@ pub extern "C" fn element_attrs_next<'a>(ptr: *mut Attrs<'a>) -> *const CStringP
 		Some((fst, snd)) => into_ptr!(CStringPair { fst, snd }),
 		None => std::ptr::null(),
 	}
-}
+	}
+	*/
 
 #[unsafe(no_mangle)]
 pub extern "C" fn element_html<'a>(ptr: *const ElementRef<'a>) -> *const c_char {
