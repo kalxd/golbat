@@ -25,9 +25,10 @@ pub unsafe extern "C" fn result_value(val: *mut CResult<*const c_void>) -> *cons
 
 #[macro_export]
 macro_rules! ok {
-	($e:expr) => {
-		Box::into_raw(Box::new(Ok(Box::into_raw(Box::new($e)))))
-	};
+	($e:expr) => {{
+		let ptr: *const _ = Box::into_raw(Box::new($e));
+		Box::into_raw(Box::new(Ok(ptr)))
+	}};
 }
 
 #[macro_export]

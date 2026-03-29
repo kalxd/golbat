@@ -1,18 +1,18 @@
-use scraper::{html::Select, Html, Selector};
+use scraper::{Html, Selector, html::Select};
 use std::ffi::c_char;
 
 use crate::into_ptr;
 use crate::rule::{drop_ptr, unsafe_str};
 
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn free_html(ptr: *mut Html) {
+pub unsafe extern "C" fn html_free(ptr: *mut Html) {
 	unsafe {
 		drop_ptr(ptr);
 	}
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn parse_html(content: *const c_char) -> *const Html {
+pub extern "C" fn html_parse_doc(content: *mut c_char) -> *const Html {
 	let content = unsafe { unsafe_str(content) };
 	let html = Html::parse_document(content);
 	into_ptr!(html)
