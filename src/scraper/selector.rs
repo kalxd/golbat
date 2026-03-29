@@ -18,3 +18,9 @@ pub extern "C" fn selector_create(char_ptr: *const c_char) -> *mut CResult<*mut 
 pub unsafe extern "C" fn selector_free(ptr: *mut Selector) {
 	unsafe { drop_ptr(ptr) }
 }
+
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn selector_dbg(ptr: *const Selector) {
+	let selector = unsafe { &*ptr };
+	dbg!(selector);
+}
