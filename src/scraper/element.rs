@@ -9,6 +9,11 @@ use scraper::{
 use crate::{into_ptr, rule::drop_ptr};
 
 #[unsafe(no_mangle)]
+pub extern "C" fn to_str(ptr: *const c_char) -> *const c_char {
+	ptr
+}
+
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn element_free<'a>(ptr: *mut ElementRef<'a>) {
 	unsafe { drop_ptr(ptr) }
 }
@@ -32,8 +37,8 @@ pub extern "C" fn element_has_class<'a>(ptr: *const ElementRef<'a>, pstr: *const
 
 #[unsafe(no_mangle)]
 pub extern "C" fn element_attr<'a>(
-	ptr: *const ElementRef<'a>,
 	pstr: *const c_char,
+	ptr: *const ElementRef<'a>,
 ) -> *const c_char {
 	let el = unsafe { &*ptr };
 	let cstr = unsafe { CStr::from_ptr(pstr) }.to_str().unwrap();
