@@ -27,8 +27,8 @@ pub extern "C" fn html_parse_fragment(char_ptr: *const c_char) -> *const Html {
 
 #[unsafe(no_mangle)]
 pub extern "C" fn html_select<'a, 'b>(
-	html: *const Html,
 	selector: *const Selector,
+	html: *const Html,
 ) -> *const Select<'a, 'b> {
 	let html = unsafe { html.as_ref().unwrap() };
 	let selector = unsafe { selector.as_ref().unwrap() };
