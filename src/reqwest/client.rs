@@ -6,7 +6,7 @@ use reqwest::{
 };
 
 use crate::{
-	into_result, not_ok,
+	into_ptr, into_result, not_ok,
 	result::CResult,
 	rule::{drop_ptr, unsafe_str},
 };
@@ -33,6 +33,18 @@ extern "C" fn client_get(url: *const c_char) -> *const CResult<*const RequestBui
 	let url = unsafe { unsafe_str(url) };
 
 	into_result!(new_client_request(url))
+}
+
+#[unsafe(no_mangle)]
+extern "C" fn client_set_header(
+	key: *const c_char,
+	value: *const c_char,
+	req: *mut RequestBuilder,
+) -> *const RequestBuilder {
+	let (key, value) = unsafe { (unsafe_str(key), unsafe_str(value)) };
+	let req = unsafe { Box::from_raw(req) };
+
+	into_ptr!(req.header(key, value))
 }
 
 fn client_receive_text(req: Box<RequestBuilder>) -> reqwest::Result<String> {
