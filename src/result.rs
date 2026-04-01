@@ -38,3 +38,13 @@ macro_rules! not_ok {
 		Box::into_raw(Box::new(Err(s.into_raw())))
 	}};
 }
+
+#[macro_export]
+macro_rules! into_result {
+	($x:expr) => {
+		match $x {
+			Ok(x) => crate::ok!(x),
+			Err(e) => crate::not_ok!(e.to_string()),
+		}
+	};
+}
