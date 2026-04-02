@@ -29,7 +29,7 @@ fn new_client_request(url: &str) -> Result<RequestBuilder, String> {
 }
 
 #[unsafe(no_mangle)]
-extern "C" fn client_get(url: *const c_char) -> *const CResult<*const RequestBuilder> {
+extern "C" fn client_make_request(url: *const c_char) -> *const CResult<*const RequestBuilder> {
 	let url = unsafe { unsafe_str(url) };
 
 	into_result!(new_client_request(url))
