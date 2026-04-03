@@ -25,15 +25,15 @@ extern "C" fn url_parse(input: *const c_char) -> *const CResult<*const Url> {
 }
 
 #[unsafe(no_mangle)]
-extern "C" fn url_has_host(host: *const c_char, url: *const Url) -> bool {
+extern "C" fn url_contain_host(host: *const c_char, url: *const Url) -> u8 {
 	let url = unsafe { &*url };
 	let host = unsafe { unsafe_str(host) };
 
-	url.host_str() == Some(host)
+	if url.host_str() == Some(host) { 1 } else { 0 }
 }
 
 #[unsafe(no_mangle)]
-extern "C" fn url_filename(url: *const Url) -> *const c_char {
+extern "C" fn url_file_path(url: *const Url) -> *const c_char {
 	let url = unsafe { &*url };
 
 	let filepath = url.to_file_path().ok();
