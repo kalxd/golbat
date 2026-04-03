@@ -64,3 +64,23 @@ extern "C" fn client_text(req: *mut RequestBuilder) -> *const CResult<*const c_c
 		Err(e) => not_ok!(e),
 	}
 }
+
+fn saving_file(file_path: &str, req: Box<RequestBuilder>) -> Result<(), String> {
+	use std::fs::File;
+
+	let mut file = File::create(file_path).map_err(|e| e.to_string())?;
+	let mut rsp = req.send().map_err(|e| e.to_string())?;
+	rsp.copy_to(&mut file).map_err(|e| e.to_string())?;
+	Ok(())
+}
+
+#[unsafe(no_mangle)]
+extern "C" fn client_download(save_path: *const c_char, req: *mut RequestBuilder) -> *const c_char {
+	let req = unsafe { Box::from_raw(req) };
+	let file_path = unsafe { unsafe_str(save_path) };
+
+	match saving_file(file_path, req) {
+		Ok(_) => std::ptr::null(),
+		Err(e) => CString::new(e).unwrap().into_raw(),
+	}
+}
