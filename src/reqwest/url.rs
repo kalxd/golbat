@@ -36,10 +36,9 @@ extern "C" fn url_contain_host(host: *const c_char, url: *const Url) -> u8 {
 extern "C" fn url_file_path(url: *const Url) -> *const c_char {
 	let url = unsafe { &*url };
 
-	let filepath = url.to_file_path().ok();
-	let filepath = filepath.as_ref().and_then(|p| p.to_str());
+	let path = url.path_segments().and_then(|sp| sp.last());
 
-	match filepath {
+	match path {
 		Some(path) => CString::new(path).unwrap().into_raw(),
 		None => std::ptr::null(),
 	}
