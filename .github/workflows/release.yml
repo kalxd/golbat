@@ -24,4 +24,4 @@ jobs:
       - name: 查看产物
         run: ls -l ./target/release
       - name: 上传
-        run: gh release --generate-notes ./target/release/${{ target }}
+        run: gh release --generate-notes ./target/release/${{ matrix.target }}
