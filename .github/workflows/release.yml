@@ -25,12 +25,9 @@ jobs:
         run: cargo build -r
       - name: 查看产物
         run: ls -l ./target/release
-      - name: 上传
-        uses: actions/download-artifact@v5
-        with:
-          name: ${{ matrix.target }}
-          path: ./target/release/${{ matrix.target }}
       - name: 发布
-        run: gh release create --generate-notes ./target/release/${{ matrix.target }}#${{ matrix.target}}
+        run: |
+          gh release create ${{ github.ref_name }} --generate-notes
+          gh release upload ${{ github.ref_name }} ./target/release/${{ matrix.target}}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
