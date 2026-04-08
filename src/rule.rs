@@ -20,3 +20,8 @@ pub(crate) unsafe fn unsafe_str<'a>(ptr: *const c_char) -> &'a str {
 pub(crate) fn into_c_string(s: &str) -> *const c_char {
 	CString::new(s).unwrap().into_raw()
 }
+
+pub(crate) fn show<T: std::fmt::Debug>(val: &T) -> *const c_char {
+	let s = format!("{:?}", val);
+	into_c_string(&s)
+}

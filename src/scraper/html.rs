@@ -2,7 +2,7 @@ use scraper::{Html, Selector, html::Select};
 use std::ffi::c_char;
 
 use crate::into_ptr;
-use crate::rule::{drop_ptr, unsafe_str};
+use crate::rule::{drop_ptr, show, unsafe_str};
 
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn html_free(ptr: *mut Html) {
@@ -39,4 +39,10 @@ pub extern "C" fn html_select<'a, 'b>(
 pub extern "C" fn html_dbg(ptr: *const Html) {
 	let html = unsafe { &*ptr };
 	dbg!(html);
+}
+
+#[unsafe(no_mangle)]
+extern "C" fn html_show(ptr: *const Html) -> *const c_char {
+	let html = unsafe { &*ptr };
+	show(html)
 }

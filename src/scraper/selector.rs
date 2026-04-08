@@ -2,11 +2,11 @@ use scraper::Selector;
 use std::ffi::c_char;
 
 use crate::result::CResult;
-use crate::rule::{drop_ptr, unsafe_str};
+use crate::rule::{drop_ptr, show, unsafe_str};
 use crate::{not_ok, ok};
 
 #[unsafe(no_mangle)]
-pub extern "C" fn selector_create(char_ptr: *const c_char) -> *const CResult<*const Selector> {
+extern "C" fn selector_create(char_ptr: *const c_char) -> *const CResult<*const Selector> {
 	let s = unsafe { unsafe_str(char_ptr) };
 	match Selector::parse(s) {
 		Ok(selector) => ok!(selector),
@@ -15,12 +15,12 @@ pub extern "C" fn selector_create(char_ptr: *const c_char) -> *const CResult<*co
 }
 
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn selector_free(ptr: *mut Selector) {
+extern "C" fn selector_free(ptr: *mut Selector) {
 	unsafe { drop_ptr(ptr) }
 }
 
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn selector_dbg(ptr: *const Selector) {
+extern "C" fn selector_show(ptr: *const Selector) -> *const c_char {
 	let selector = unsafe { &*ptr };
-	dbg!(selector);
+	show(selector)
 }
