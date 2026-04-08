@@ -26,6 +26,11 @@ jobs:
       - name: 查看产物
         run: ls -l ./target/release
       - name: 上传
-        run: gh release create --generate-notes ./target/release/${{ matrix.target }}
+        uses: actions/download-artifact@v5
+        with:
+          name: ${{ matrix.target }}
+          path: ./target/release/${{ matrix.target }}
+      - name: 发布
+        run: gh release create --generate-notes ./target/release/${{ matrix.target }}#${{ matrix.target}}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
