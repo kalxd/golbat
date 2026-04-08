@@ -10,11 +10,14 @@ jobs:
         include:
           - os: ubuntu-latest
             target: libgolbat.so
-          - os: window-latest
-            target: libgolbat.lib
-          - os: macos-latest
-            target: libgolbat.dyn
+          # - os: window-latest
+          #   target: libgolbat.lib
+          # - os: macos-latest
+          #   target: libgolbat.dyn
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      issues: write
     steps:
       - name: 设定rust版本
         run: rustup override set 1.92.0
@@ -25,3 +28,5 @@ jobs:
         run: ls -l ./target/release
       - name: 上传
         run: gh release create --generate-notes ./target/release/${{ matrix.target }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
