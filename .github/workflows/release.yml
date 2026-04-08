@@ -10,8 +10,8 @@ jobs:
         include:
           - os: ubuntu-latest
             target: libgolbat.so
-          # - os: window-latest
-          #   target: libgolbat.lib
+          - os: window-latest
+            target: libgolbat.lib
           # - os: macos-latest
           #   target: libgolbat.dyn
     runs-on: ${{ matrix.os }}
