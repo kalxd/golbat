@@ -1,0 +1,27 @@
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: libgolbat.so
+          - os: window-latest
+            target: libgolbat.lib
+          - os: macos-latest
+            target: libgolbat.dyn
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: 设定rust版本
+        run: rustup override set 1.92.0
+      - uses: actions/checkout@v4
+      - name: 编译
+        run: cargo build -r
+      - name: 查看产物
+        run: ls -l ./target/release
+      - name: 上传
+        run: gh release --generate-notes ./target/release/${{ target }}
