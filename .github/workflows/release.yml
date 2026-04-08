@@ -12,8 +12,8 @@ jobs:
             target: libgolbat.so
           - os: window-latest
             target: libgolbat.lib
-          # - os: macos-latest
-          #   target: libgolbat.dyn
+          - os: macos-latest
+            target: libgolbat.dyn
     runs-on: ${{ matrix.os }}
     permissions:
       contents: write
