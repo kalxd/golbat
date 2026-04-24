@@ -36,12 +36,6 @@ pub extern "C" fn html_select<'a, 'b>(
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn html_dbg(ptr: *const Html) {
-	let html = unsafe { &*ptr };
-	dbg!(html);
-}
-
-#[unsafe(no_mangle)]
 extern "C" fn html_show(ptr: *const Html) -> *const c_char {
 	let html = unsafe { &*ptr };
 	show(html)
